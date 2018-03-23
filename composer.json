@@ -1,0 +1,26 @@
+{
+    "name": "dkerner/voronoi-obfuscate",
+    "description": "Create an obfuscated version of a source image",
+    "version": "0.1.0",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "DanielKerner",
+            "email": "code@danielkerner.com"
+        }
+    ],
+    "require": {
+
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "DKerner\\": "src/"
+        },
+        "classmap": [
+            { "Nurbs_Point": "src/Nurbs/Point.php" },
+            { "Voronoi": "src/Nurbs/Voronoi.php" }
+        ]
+    }
+}
