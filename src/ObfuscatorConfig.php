@@ -10,6 +10,7 @@ class ObfuscatorConfig
     const HEIGHT_ZERO_OR_LESS = "Please use an height greater than 0";
     const MULTIPLE_INPUT_OPTIONS = "Multiple Inputs provided. Use input resource or input path";
     const NO_INPUT_RESOURCE_GIVEN = "Creating from resource but none given";
+    const INPUT_RESOURCE_NOT_OF_TYPE_GD = "Please provide a valid gd resource";
 
     /**
      * @var string
@@ -73,6 +74,10 @@ class ObfuscatorConfig
      */
     public function setInputResource( $inputResource )
     {
+        if (get_resource_type($inputResource) !== 'gd') {
+            throw new \Exception(self::WIDTH_ZERO_OR_LESS);
+        }
+
         $this->inputResource = $inputResource;
         $this->checkInputs();
         $this->setInputDimension();
