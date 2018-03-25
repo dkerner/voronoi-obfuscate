@@ -1,7 +1,7 @@
 {
     "name": "dkerner/voronoi-obfuscate",
     "description": "Create an obfuscated version of a source image",
-    "version": "0.1.0",
+    "version": "0.1.5",
     "type": "library",
     "license": "MIT",
     "authors": [

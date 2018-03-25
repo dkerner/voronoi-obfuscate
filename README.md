@@ -1,3 +1,5 @@
+This is currently a work in progress and not completly stable. API not yet final so new versions can break code.!
+
 # voronoi-obfuscate
 
 Create an obfuscated version of a source image by using a Voronoi diagram (see. https://en.wikipedia.org/wiki/Voronoi_diagram)
@@ -48,6 +50,24 @@ $config->setImagePath('demo.jpg')
     ->setOutputSize(400,800);
 
 VoronoiObfuscator::createFromConfig($config);
+```
+
+Or use an image resource as input and output
+```php
+
+$config = new ObfuscatorConfig();
+ 
+// set input
+$imageRessource = imagecreatefromjpeg('demo.jpg');
+$config->setInputResource( $imageRessource )
+    ->setCellCount(100)
+    ->setOutputSize(100,100);
+    
+$processedImageRessource = VoronoiObfuscator::processImage($config);
+ 
+// use it further however needed
+imagejpeg( $processedImageRessource, 'out_processed.jpg');
+
 ```
 
 ## Authors

@@ -8,11 +8,17 @@ class ObfuscatorConfig
     const AMOUNT_LESS_THAN_TWO = "Please use an amount greater than 1";
     const WIDTH_ZERO_OR_LESS = "Please use an width greater than 0";
     const HEIGHT_ZERO_OR_LESS = "Please use an height greater than 0";
+    const MULTIPLE_INPUT_OPTIONS = "Multiple Inputs provided. Use input resource or input path";
+    const NO_INPUT_RESOURCE_GIVEN = "Creating from resource but none given";
 
     /**
      * @var string
      */
-    protected $imagePath;
+    protected $inputPath;
+    /**
+     * @var resource
+     */
+    protected $inputResource;
     /**
      * @var string
      */
@@ -25,26 +31,51 @@ class ObfuscatorConfig
      * @var ImageDimension
      */
     protected $outputDimension;
-
+    /**
+     * @var ImageDimension
+     */
+    protected $inputDimension;
 
 
     /**
      * @return mixed
      */
-    public function getImagePath()
+    public function getInputPath()
     {
-        return $this->imagePath;
+        return $this->inputPath;
     }
 
     /**
-     * @param mixed $imagePath
+     * @param mixed $inputPath
      */
-    public function setImagePath(string $imagePath)
+    public function setInputPath(string $inputPath)
     {
-        if(!file_exists($imagePath)) {
-            throw new \Exception(self::FILE_NOT_FOUND .  $imagePath);
+        if (!file_exists($inputPath)) {
+            throw new \Exception(self::FILE_NOT_FOUND . $inputPath);
         }
-        $this->imagePath = $imagePath;
+        $this->inputPath = $inputPath;
+        $this->checkInputs();
+        $this->setInputDimension();
+
+        return $this;
+    }
+
+    /**
+     * @return resource
+     */
+    public function getInputResource()
+    {
+        return $this->inputResource;
+    }
+
+    /**
+     * @param $inputResource
+     */
+    public function setInputResource( $inputResource )
+    {
+        $this->inputResource = $inputResource;
+        $this->checkInputs();
+        $this->setInputDimension();
 
         return $this;
     }
@@ -80,7 +111,7 @@ class ObfuscatorConfig
      */
     public function setCellCount(int $cellCount)
     {
-        if($cellCount < 2) {
+        if ($cellCount < 2) {
             throw new \Exception(self::AMOUNT_LESS_THAN_TWO);
         }
         $this->cellCount = $cellCount;
@@ -89,6 +120,13 @@ class ObfuscatorConfig
     }
 
 
+    /**
+     * @return ImageDimension
+     */
+    public function getInputDimension()
+    {
+        return $this->inputDimension;
+    }
 
     /**
      * @return ImageDimension
@@ -98,15 +136,42 @@ class ObfuscatorConfig
         return $this->outputDimension;
     }
 
-    public function setOutputSize(int $newWidth,int $newHeight)
+    public function setOutputSize(int $newWidth, int $newHeight)
     {
-        if($newWidth < 1) {
+        if ($newWidth < 1) {
             throw new \Exception(self::WIDTH_ZERO_OR_LESS);
         }
-        if($newHeight < 1) {
+        if ($newHeight < 1) {
             throw new \Exception(self::HEIGHT_ZERO_OR_LESS);
         }
 
         $this->outputDimension = new ImageDimension($newWidth, $newHeight);
+    }
+
+    protected function setInputDimension()
+    {
+        $this->inputDimension = ImageDimension::fromResource($this->getImage());
+    }
+
+    protected function checkInputs()
+    {
+        if ($this->getInputPath() && $this->getInputResource()){
+            throw new \Exception(self::MULTIPLE_INPUT_OPTIONS);
+        }
+    }
+
+    public function getImage()
+    {
+        if($this->getInputResource()) {
+            return $this->getInputResource();
+        }else{
+            return imagecreatefromjpeg($this->getImagePath());
+        }
+    }
+
+    public function returnResource()
+    {
+        print_r($this->getOutputPath());
+        return $this->getOutputPath() ? false : true;
     }
 }

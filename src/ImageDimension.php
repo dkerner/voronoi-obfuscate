@@ -20,6 +20,11 @@ class ImageDimension
         return new ImageDimension($width, $height);
     }
 
+    public static function fromResource($imageResoucre)
+    {
+        return new ImageDimension(imagesx( $imageResoucre ) , imagesy( $imageResoucre ));
+    }
+
     /**
      * @return mixed
      */

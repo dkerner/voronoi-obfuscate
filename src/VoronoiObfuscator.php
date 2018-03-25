@@ -18,12 +18,24 @@ class VoronoiObfuscator
     public static function createFromImagePath(string $imagePath, string $outputPath, int $cellCount = 400)
     {
         $config = new ObfuscatorConfig();
-        $config->setImagePath($imagePath)
+        $config->setInputPath($imagePath)
             ->setOutputPath($outputPath)
             ->setCellCount($cellCount)
             ->setOutputSize(500,800);
 
         return new VoronoiObfuscator($config);
+    }
+
+    public static function processImage(ObfuscatorConfig $config, $imageResource = null)
+    {
+        if(!$imageResource && !$config->getInputResource()) {
+            throw new \Exception(ObfuscatorConfig::NO_INPUT_RESOURCE_GIVEN);
+        }
+        if($imageResource){
+            $config->setInputResource($imageResource);
+        }
+
+        return (new VoronoiObfuscator($config))->getProcessedImage();
     }
 
     public static function createFromConfig(ObfuscatorConfig $config)
@@ -66,23 +78,32 @@ class VoronoiObfuscator
 // Draw polygons
         $this->drawPolygons();
 
-// Display image
-        imagejpeg($this->outputImage, $this->config->getOutputPath());
+        // return resource if no output was given
+        if( $this->config->returnResource() ){
+            return $this->outputImage;
+        }else{
+            return imagejpeg($this->outputImage, $this->config->getOutputPath());
+        }
     }
 
     public function getImageReference()
     {
-        return imagecreatefromjpeg($this->config->getImagePath());
+        return $this->config->getImage();
     }
 
     public function getImageDimensions()
     {
-        return ImageDimension::fromFile($this->config->getImagePath());
+        return $this->config->getInputDimension();
     }
 
     public function getBoundingBox()
     {
         return BoundingBox::createFromDimension($this->inputDimensions);
+    }
+
+    public function getProcessedImage()
+    {
+        return $this->outputImage;
     }
 
     public function generatePoints()
