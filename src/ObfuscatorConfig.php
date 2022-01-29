@@ -70,11 +70,11 @@ class ObfuscatorConfig
     }
 
     /**
-     * @param $inputResource
+     * @param \GdImage $inputResource
      */
     public function setInputResource( $inputResource )
     {
-        if (get_resource_type($inputResource) !== 'gd') {
+        if (get_class($inputResource) !== \GdImage::class) {
             throw new \Exception(self::WIDTH_ZERO_OR_LESS);
         }
 
