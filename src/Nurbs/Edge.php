@@ -21,7 +21,7 @@ class Nurbs_Edge
 	 * Créé l'objet.
 	 * 
 	 */
-	public function __construct (Nurbs_Point $p1 = null, Nurbs_point $p2 = null)
+	public function __construct (Nurbs_Point|null $p1 = null, Nurbs_point|null $p2 = null)
 	{
 		// On stocke les points
 		$this->p1 = $p1;
